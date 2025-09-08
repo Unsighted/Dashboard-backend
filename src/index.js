@@ -9,7 +9,7 @@ import { authRoutes } from './routes/authRoutes.js';
 import { usersRoutes } from './routes/usersRoutes.js';
 import { suppliersRoutes } from './routes/suppliersRoutes.js';
 import { logger } from './utils/logger.js';
-import { checkAuth, checkRole } from './authMiddleware.js';
+import { checkAuth, checkRole } from './middleware/authMiddleware.js';
 dotenv.config();
 
 const app = express();
@@ -20,14 +20,14 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 
-// Ruta pública
-app.use('/api/auth/login', authRoutes);
+// Rutas públicas de autenticación
+app.use('/api/auth', authRoutes);
 
 // Middleware para proteger todas las rutas siguientes
 app.use(checkAuth);
 
-app.use('/api/appointments', checkRole(['admin', 'usuario']), appointmentsRoutes);
-app.use('/api/services', checkRole(['admin']), servicesRoutes);
+app.use('/api/appointments', checkRole(['user', 'admin']), appointmentsRoutes);
+app.use('/api/services', checkRole(['user', 'admin']), servicesRoutes);
 app.use('/api/clients', checkRole(['admin']), clientsRoutes);
 app.use('/api/users', checkRole(['admin']), usersRoutes);
 app.use('/api/suppliers', checkRole(['admin']), suppliersRoutes);

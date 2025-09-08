@@ -1,12 +1,12 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import { getConnection } from '../config/db.js';
-import { authMiddleware } from './authRoutes.js';
+import { checkAuth } from '../middleware/authMiddleware.js';
 
 const router = express.Router();
 
 // Obtener todos los usuarios (protegido)
-router.get('/', authMiddleware, async (req, res, next) => {
+router.get('/', checkAuth, async (req, res, next) => {
   let conn;
   try {
     conn = await getConnection();
@@ -20,7 +20,7 @@ router.get('/', authMiddleware, async (req, res, next) => {
 });
 
 // Crear usuario (protegido)
-router.post('/', authMiddleware, async (req, res, next) => {
+router.post('/', checkAuth, async (req, res, next) => {
   let conn;
   try {
     const { name, email, password, role } = req.body;
@@ -39,7 +39,7 @@ router.post('/', authMiddleware, async (req, res, next) => {
 });
 
 // Actualizar usuario (protegido)
-router.put('/:id', authMiddleware, async (req, res, next) => {
+router.put('/:id', checkAuth, async (req, res, next) => {
   let conn;
   const { id } = req.params;
   try {
@@ -60,7 +60,7 @@ router.put('/:id', authMiddleware, async (req, res, next) => {
 });
 
 // Eliminar usuario (protegido)
-router.delete('/:id', authMiddleware, async (req, res, next) => {
+router.delete('/:id', checkAuth, async (req, res, next) => {
   let conn;
   const { id } = req.params;
   try {

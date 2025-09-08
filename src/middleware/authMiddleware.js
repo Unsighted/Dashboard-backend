@@ -14,6 +14,7 @@ export const checkAuth = (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token, secret);
+        
         req.user = decoded; // Agrega el payload del token (id, role) a la request
         next();
     } catch (error) {
